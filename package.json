@@ -1,0 +1,18 @@
+{
+  "name": "express-starter-template",
+  "version": "1.0.0",
+  "description": "A starter template for an Express.js application",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "dependencies": {
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "mongoose": "^8.9.6",
+    "tailwindcss": "^4.0.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.0"
+  }
+}
