@@ -8,7 +8,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Connect to MongoDB
-mongoose.connect('mongodb+srv://aryanpatel19aug3:pVQa7EdiQVXZDt4U@embd0.uu6xp.mongodb.net/', {
+mongoose.connect('mongodburl', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
