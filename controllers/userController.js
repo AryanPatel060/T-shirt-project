@@ -1,7 +1,8 @@
 const User = require('../models/User');
+const { handlesignup } = require('./signupController');
 
 // Signup function
-exports.signup = async (req, res) => {
+signup = async (req, res) => {
     const { username, password } = req.body;
     const newUser = new User({ username, password });
     try {
@@ -13,7 +14,7 @@ exports.signup = async (req, res) => {
 };
 
 // Login function
-exports.login = async (req, res) => {
+login = async (req, res) => {
     const { username, password } = req.body;
     try {
         const user = await User.findOne({ username });
@@ -25,3 +26,13 @@ exports.login = async (req, res) => {
         res.status(500).send('Error logging in: ' + error.message);
     }
 };
+
+handlegetuser = async (req, res) => {
+    res.render('welcome', { user: req.user });
+}
+
+module.exports = {
+    signup,
+    login,
+    handlegetuser
+}

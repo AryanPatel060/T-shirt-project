@@ -1,44 +1,43 @@
+require("dotenv").config();
 const express = require('express');
-const path = require('path');
+const path = require('path'); 
+const dbconnect = require("./dbconnect");
 const mongoose = require('mongoose');
-const User = require('./models/User'); // Import User model
-const userController = require('./controllers/userController'); // Import user controller
+const { restrictTologedinUser, checkAuth } = require('./middleware/authMiddleware');
+const cookieParser = require("cookie-parser");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8001; 
 
-// Connect to MongoDB
-mongoose.connect('mongodb+srv://aryanpatel19aug3:pVQa7EdiQVXZDt4U@embd0.uu6xp.mongodb.net/', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
-.then(() => console.log('MongoDB connected'))
-.catch(err => console.error('MongoDB connection error:', err));
-
-// Middleware to parse request body
+app.set('view engine', 'ejs'); 
+app.set('views', path.join(__dirname, 'views')); 
+app.use(express.json());
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Set the view engine to EJS
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
+// Database connection
+dbconnect(process.env.Mongodb_URL); 
 
-// Define routes
-app.get('/', (req, res) => {
-    res.render('index');
+signupRouter = require('./routes/signupRouter') ;
+loginRouter = require('./routes/loginRouter');
+logoutRouter = require('./routes/logoutRouter');
+userRouter = require('./routes/UserRouter');
+designerRouter = require('./routes/designerRouter')
+
+// Routes
+app.use('/login', checkAuth, loginRouter);
+app.use('/signup',checkAuth, signupRouter);
+app.use('/logout', logoutRouter);
+
+// Protected route example
+app.use('/user', userRouter);
+app.use('/designer',designerRouter);
+app.use('/',restrictTologedinUser,(req,res)=>{
+    res.redirect('/welcome',{user:req.user});
 });
 
-app.get('/signup', (req, res) => {
-    res.render('signup');
-});
-
-app.post('/signup', userController.signup); // Handle signup
-app.get('/login', (req, res) => {
-    res.render('login');
-});
-
-app.post('/login', userController.login); // Handle login
-
-// Start the server
+// Start server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });

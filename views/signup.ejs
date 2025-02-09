@@ -9,17 +9,48 @@
 <body class="flex items-center justify-center h-screen bg-gray-100">
     <div class="bg-white p-8 rounded shadow-md w-96">
         <h1 class="text-2xl font-bold mb-6 text-center">Signup</h1>
-        <form action="/signup" method="POST">
+        <form action="/signup" method="POST" onsubmit="return validateForm()">
+            
+            <label for="username" class="block text-sm font-medium text-gray-700">Username:</label>
+            <input type="text" id="username" name="usersignup[username]" required class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+            
+            <label for="email" class="block text-sm font-medium text-gray-700 mt-4">Email:</label>
+            <input type="email" id="email" name="usersignup[email]" required class="mt-1 block w-full border border-gray-300 rounded-md p-2">
 
-        <label for="username" class="block text-sm font-medium text-gray-700">Username:</label>
-        <input type="text" id="username" name="username" required class="mt-1 block w-full border border-gray-300 rounded-md p-2">
-        
-        <label for="password" class="block text-sm font-medium text-gray-700 mt-4">Password:</label>
-        <input type="password" id="password" name="password" required class="mt-1 block w-full border border-gray-300 rounded-md p-2">
-        
-        <button type="submit" class="mt-6 w-full bg-blue-500 text-white p-2 rounded">Signup</button>
-        <p class="mt-4 text-center">Already have an account? <a href="/login" class="text-blue-500">Login here</a></p>
+            <label for="password" class="block text-sm font-medium text-gray-700 mt-4">Password:</label>
+            <input type="password" id="password" name="usersignup[password]" required class="mt-1 block w-full border border-gray-300 rounded-md p-2">
 
-    </form>
+            <label for="cpassword" class="block text-sm font-medium text-gray-700 mt-4">Confirm Password:</label>
+            <input type="password" id="cpassword"  required class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+            
+            <p id="error-message" class="text-red-500 text-sm mt-2 hidden">Passwords do not match!</p>
+
+            <label for="role" class="block text-sm font-medium text-gray-700 mt-4">Select Role:</label>
+            <select id="role" name="usersignup[role]" required class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+                <option value="user">Normal User</option>
+                <option value="designer">Designer</option>
+            </select>
+
+            <button type="submit" id="submit-btn" class="mt-6 w-full bg-blue-500 text-white p-2 rounded">Signup</button>
+            <p class="mt-4 text-center">Already have an account? <a href="/login" class="text-blue-500">Login here</a></p>
+
+        </form>
+    </div>
+
+    <script>
+        function validateForm() {
+            let password = document.getElementById("password").value;
+            let confirmPassword = document.getElementById("cpassword").value;
+            let errorMessage = document.getElementById("error-message");
+
+            if (password !== confirmPassword) {
+                errorMessage.classList.remove("hidden");
+                return false; // Prevent form submission
+            } else {
+                errorMessage.classList.add("hidden");
+                return true; // Allow form submission
+            }
+        }
+    </script>
 </body>
 </html>
