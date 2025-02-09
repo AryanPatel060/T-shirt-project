@@ -6,26 +6,36 @@ const mongoose = require('mongoose');
 const { restrictTologedinUser, checkAuth } = require('./middleware/authMiddleware');
 const cookieParser = require("cookie-parser");
 
+const storage = multer.diskStorage({
+    destination: "./uploads/", // Directory where images will be stored
+    filename: (req, file, cb) => {
+        cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
+    },
+});
+
+// Routes import 
+const signupRouter = require('./routes/signupRouter') ;
+const loginRouter = require('./routes/loginRouter');
+const logoutRouter = require('./routes/logoutRouter');
+const userRouter = require('./routes/UserRouter');
+const designerRouter = require('./routes/designerRouter');
+
+
 const app = express();
 const PORT = process.env.PORT || 8001; 
-
-
-app.set('view engine', 'ejs'); 
-app.set('views', path.join(__dirname, 'views')); 
-app.use(express.json());
-app.use(cookieParser());
-
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
 
 // Database connection
 dbconnect(process.env.Mongodb_URL); 
 
-signupRouter = require('./routes/signupRouter') ;
-loginRouter = require('./routes/loginRouter');
-logoutRouter = require('./routes/logoutRouter');
-userRouter = require('./routes/UserRouter');
-designerRouter = require('./routes/designerRouter')
+// for templates view 
+app.set('view engine', 'ejs'); 
+app.set('views', path.join(__dirname, 'views')); 
+
+// middlewares
+app.use(express.json());
+app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
 app.use('/login', checkAuth, loginRouter);
